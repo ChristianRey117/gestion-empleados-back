@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 
 
@@ -48,7 +50,14 @@ public class EmpleadoController {
         return ResponseEntity.ok(employee);
     }
 
-    
-    
-    
+    @PutMapping("/empleados/{id}")
+    public ResponseEntity<Empleado> updateEmployee(@PathVariable Long id, @RequestBody Empleado detailsEmployee) {
+        Empleado employee = _empleadoRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("No se encontro ningun empleado") );
+        employee.setNombre(detailsEmployee.getNombre());
+        employee.setApellido(detailsEmployee.getApellido());
+        employee.setEmail(detailsEmployee.getEmail());
+
+        Empleado employeeUpdated = _empleadoRepository.save(employee);
+        return ResponseEntity.ok(employeeUpdated);
+    }
 }
